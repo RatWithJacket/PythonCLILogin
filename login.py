@@ -32,7 +32,7 @@ def open_db():
 # Displays home menu stuff
 def display_home_menu():
     print("╔══════════╗")
-    print("  WELCOME!  ")
+    print("   HOME  ")
     print("╚══════════╝")
 
     print("1 | LOGIN")
@@ -133,8 +133,9 @@ def view_account():
     print(" FULL LIST OF USERS ")
     print("└──────────────────┘")
     accounts = open_db()
-    for user, password in accounts.items():
-        print(f"{user}  |  {password}")
+    for i, (user, password) in enumerate(accounts.items(), start=1):
+        print(f"USER #{i}   |   {user} ")
+        print(f"              {CYAN}{password}{RESET} ")
 
 
 display_home_menu()
