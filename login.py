@@ -15,9 +15,16 @@ import os
 os.system("color") # For colors in the terminal! :)
 
 # ANSI escape codes for cyan text and background
-CYAN = "\033[36m"      # Text color cyan
-RESET = "\033[0m"      # Reset to default
-# TODO add more colors!!!!!!!!!!
+colors = {
+    'RESET': '\033[0m',       
+    'RED': '\033[31m',
+    'GREEN': '\033[32m',
+    'YELLOW': '\033[33m',
+    'BLUE': '\033[34m',
+    'PINK': '\033[35m',
+    'CYAN': '\033[36m',
+    'WHITE': '\033[37m'
+}
 
 # Database connection function
 def open_db():
@@ -29,17 +36,27 @@ def open_db():
             accounts[db_user] = db_password # Creates new item with user and password as key value pairs
     return accounts
 
+def display_welcome_ui():
+    print("\n\n")
+    print("╔═════════════════════════════════════╗")
+    print("  ┬ ┬┌─┐┬  ┌─┐┌─┐┌┬┐┌─┐  ┬ ┬┌─┐┌┬┐┌─┐ ")
+    print("  │││├┤ │  │  │ ││││├┤   ├─┤│ ││││├┤  ")
+    print("  └┴┘└─┘┴─┘└─┘└─┘┴ ┴└─┘  ┴ ┴└─┘┴ ┴└─┘ ")
+    print("╚═════════════════════════════════════╝")
+
+def colorise(text, color):
+    return f"{colors[color]}{text}{colors['RESET']}"
+
 # Displays home menu stuff
 def display_home_menu():
-    print("╔══════════╗")
-    print("   HOME  ")
-    print("╚══════════╝")
-
+    print("\n┌───────────────┐")
+    print("    MAIN MENU    ")
+    print("└───────────────┘")
     print("1 | LOGIN")
     print("2 | CREATE ACCOUNT")
     print("3 | VIEW ACCOUNTS")
     print("4 | EXIT")
-    i = input("\nPick an option [1/2/3/4] : ")
+    i = input(colorise("\nPick an option [1/2/3/4] : ", "PINK"))
     # Essentially this switch case statement acts like a router 
     match i:
         case "1":
@@ -56,11 +73,10 @@ def user_login():
     login_username = ""
     login_password = ""
 
-    print("\n┌──────┐")
-    print(" LOGIN ")
-    print("└──────┘")
-    login_username = input("\nEnter username: ") 
-    login_password = input("Enter password: ")
+    print("\nLOGIN ")
+    print("───────────────────────────────────────────────")
+    login_username = input(colorise("Enter username: ", "PINK"))
+    login_password = input(colorise("Enter password: ", "PINK"))
 
     accounts = open_db()
 
@@ -78,10 +94,9 @@ def user_login():
 # TODO maybe split the username and password thing into its own functions so they dont have to go back??? or add sleep function so it seems slightly more interactive or whatever
 
 def create_account():
-    print("\n┌──────────────────┐")
-    print(" CREATE NEW ACCOUNT ")
-    print("└──────────────────┘")
-    new_username = input("Enter username: ") 
+    print("\nCREATE NEW ACCOUNT ")
+    print("───────────────────────────────────────────────")
+    new_username = input(colorise("Enter username: ", "PINK"))
 
     accounts = open_db()
     
@@ -90,27 +105,30 @@ def create_account():
         print("Username already taken..!")
         create_account()
     else:
-        print("PASSWORD CREATION MENU")
+        print("\n┌───────────────────────┐")
+        print(" PASSWORD CREATION MENU")
+        print("└───────────────────────┘")
         print("1 | CREATE YOUR OWN PASSWORD")
         print("2 | RANDOMLY GENERATE PASSWORD")
-        password_gen_option = input("\nPick an option [1/2] : ")
+        password_gen_option = input(colorise("\nPick an option [1/2] : ", "PINK"))
         if password_gen_option == "1":
-            new_password = input("\nEnter a new password: ")
+            new_password = input(colorise("Enter a new password: ", "PINK"))
             new_line = new_username + "," + new_password
             with open("accounts.txt", "a") as db:
                 db.write("\n" + new_line)
                 db.close()
-            print("New account created successfully. You can try login now.")
+            print(colorise("New account created successfully. You can try login now.", "GREEN"))
         else:
-            print("Would you like your new password to contain: ")
-            use_numbers = input("Include numbers? (y/n): ").strip().lower() == 'y'
-            use_symbols = input("Include symbols? (y/n): ").strip().lower() == 'y'
+            print("\nRANDOM PASSWORD GENERATOR")
+            print("───────────────────────────────────────────────")
+            use_numbers = input(colorise("Include numbers? (y/n): ", "PINK")).strip().lower() == 'y'
+            use_symbols = input(colorise("Include symbols? (y/n): ", "PINK")).strip().lower() == 'y'
             try:
-                length = int(input("Enter the desired password length (max 64): "))
+                length = int(input(colorise("Enter the desired password length (max 64): ", "PINK")))
                 if length < 0:
-                    print("Please enter a positive integer.")
+                    print(colorise("Please enter a positive integer.", "RED"))
                 elif length > 64:
-                    print("Password too long, please specify a number below 64.")
+                    print(colorise("Password too long, please specify a number below 64.", "RED"))
                 else:
                     # For now it just declares variables with the default
                     characters = string.ascii_letters
@@ -122,20 +140,22 @@ def create_account():
                     new_random_password = ''.join(secrets.choice(characters) for _ in range(length))
                     print("Account created successfully! You can now log in.")
                     print("Here is your newly generated password: ")
-                    print(f"{CYAN}{new_random_password}{RESET}")
+                    print(f"{colors['CYAN']}{new_random_password}{colors['RESET']}")
                     print("Please write it down or store it somewhere safe.")
+                    display_home_menu()
                     # TODO pls put this into its own function maybe it looks awful right now sobs
             except ValueError:
                 print("Please enter a valid number.")
                 
 def view_account():
-    print("\n┌──────────────────┐")
-    print(" FULL LIST OF USERS ")
-    print("└──────────────────┘")
+    print("\n┌───────────────────────┐")
+    print("   FULL LIST OF USERS   ")
+    print("└───────────────────────┘")
     accounts = open_db()
     for i, (user, password) in enumerate(accounts.items(), start=1):
-        print(f"USER #{i}   |   {user} ")
-        print(f"              {CYAN}{password}{RESET} ")
+        print(f"USER #{i}   |  {user} ")
+        print(f"          |  {colors['CYAN']}{password}{colors['RESET']} ")
+        print("───────────────────────────────────────────────")
 
-
+display_welcome_ui()
 display_home_menu()
