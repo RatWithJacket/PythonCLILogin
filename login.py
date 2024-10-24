@@ -24,7 +24,7 @@ print("4 | EXIT")
 loginUsername = ""
 loginPassword = ""
 
-i = input("\nSelect your option with 1, 2, 3, 4")
+i = input("\nPick an option: [1/2/3/4]")
 
 if i == "1":
     print("\n┌──────┐")
