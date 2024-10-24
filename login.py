@@ -11,6 +11,12 @@ import sys
 import time 
 import secrets
 import string
+import os
+os.system("color") # For colors in the terminal! :)
+
+# ANSI escape codes for cyan text and background
+CYAN = "\033[36m"      # Text color cyan
+RESET = "\033[0m"      # Reset to default
 
 # Database connection function
 def open_db():
@@ -105,10 +111,20 @@ def create_account():
                 elif length > 64:
                     print("Password too long, please specify a number below 64.")
                 else:
-                    
+                    # TODO pls put this into its own function maybe it looks awful right now sobs
+                    # For now it just declares variables with the default
+                    characters = string.ascii_letters
+                    # Then append associated customisation variables if they are true from the earlier input
+                    if use_numbers:
+                        characters += string.digits
+                    if use_symbols:
+                        characters += string.punctuation
+                    new_random_password = ''.join(secrets.choice(characters) for _ in range(length))
+                    print("Here is your newly generated password: ")
+                    print(f"{CYAN}{new_random_password}{RESET}")
+                    print("Please write it down or store it somewhere safe.")
             except ValueError:
                 print("Please enter a valid number.")
                 
-        
 
 display_home_menu()
