@@ -4,7 +4,17 @@
 # Code by Leah Zheng 
 # @RatWithJacket on GitHub (ratwithjacket@gmail.com)
 # Created on 2024-10-24
+# This project is a simple account management system that allows users to login, create an account, view the account, and exit the system using a text based UI. 
+# Made for educational purposes only for ICTPRG302. 
 # ========================================================
+
+"""
+TODO
+- Add proper exit system
+- Add basic input validation / sanitisation..?
+- Finish adding colors to everything
+- Utilise sleep function so it seems a bit more responsive and cool and stuff.
+"""
 
 # Required libraries
 import sys 
@@ -116,7 +126,6 @@ def create_account():
             new_line = new_username + "," + new_password
             with open("accounts.txt", "a") as db:
                 db.write("\n" + new_line)
-                db.close()
             print(colorise("New account created successfully. You can try login now.", "GREEN"))
         else:
             print("\nRANDOM PASSWORD GENERATOR")
@@ -157,5 +166,12 @@ def view_account():
         print(f"          |  {colors['CYAN']}{password}{colors['RESET']} ")
         print("───────────────────────────────────────────────")
 
+def countdown_animation():
+    for i in range(3, 0, -1):
+        sys.stdout.write(f"\rTaking you back to the main menu in {i}...")
+        sys.stdout.flush()
+        time.sleep(1)  # Wait for 1 second
+
 display_welcome_ui()
 display_home_menu()
+
