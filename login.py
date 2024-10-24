@@ -26,6 +26,9 @@ loginPassword = ""
 
 i = input("\nPick an option: [1/2/3/4]")
 
+# ==============
+# LOGIN SYSTEM
+# ==============
 if i == "1":
     print("\n┌──────┐")
     print(" LOGIN: ")
@@ -33,16 +36,17 @@ if i == "1":
     loginUsername = input("\nEnter username: ") 
     loginPassword = input("Enter password: ")
 
-    # Read and parse accounts.txt
-    accounts = {}
+    # PARSING ACCOUNTS.TXT
+    accounts = {} # New dictionary where all the database information will be stored
+    # With statement ensures proper opening and release of resources. 
     with open("accounts.txt", "r") as db:
         for line in db:
-            user, password = line.strip().split(',', 1)
-            accounts[user] = password
-
-    # Check credentials
+            db_user, db_password = line.strip().split(',', 1) # Remove any whitespace and splits line into two parts at first comma
+            accounts[db_user] = db_password # Creates new item with user and password as key value pairs
+        
+    # LOGIN VALIDATION
     if loginUsername in accounts:
-        if accounts[loginUsername] == loginPassword:
+        if accounts[loginUsername] == loginPassword: # Pass user submitted username into array to check if they match
             print("\nSuccessful Login!")
             time.sleep(1)
             sys.exit()
